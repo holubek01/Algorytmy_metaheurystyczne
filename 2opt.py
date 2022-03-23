@@ -76,11 +76,21 @@ def koks_funkcja(acutal_tour):
                 l = j
 
     if(mini < destination2(len(potential_tour), matr, potential_tour)):
-        print(destination2(len(potential_tour), matr, potential_tour))
         koks_funkcja(opt_swap(acutal_tour,k,l))
     else:
         print(potential_tour)
         print(destination2(len(potential_tour), matr, potential_tour))
+
+
+
+
+
+#def result():
+ #   optTour[0] = random.randint(0, sizeTab - 1)                  # wrzuc randomowe miesato na poczatek
+  #  tour.remove(optTour[0])                                  # usun z wyjsciowej tablicy miasto
+   # pi_0 = close_neighbour(optTour, matr, tour)
+
+#    koks_funkcja(pi_0)
 
 
 

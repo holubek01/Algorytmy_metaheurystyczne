@@ -1,19 +1,19 @@
 import tsplib95
 import random
 
-def close_neighbour(optTour, matr, tour):
+def close_neighbour(optTour, matr, tour_copy):
     for i in range(0, int(sizeTab) - 1):
-        cls = matr[optTour[i]][tour[0]]
-        optTour[i+1] = tour[0]
-        if len(tour) > 1:
-            for j in range(1, len(tour)):
-                if matr[optTour[i]][tour[j]] < cls:
-                    cls = matr[optTour[i]][tour[j]]
-                    optTour[i + 1] = tour[j]                    #j jest najblizszym sasaidem
-            tour.remove(optTour[i+1])
+        cls = matr[optTour[i]][tour_copy[0]]
+        optTour[i+1] = tour_copy[0]
+        if len(tour_copy) > 1:
+            for j in range(1, len(tour_copy)):
+                if matr[optTour[i]][tour_copy[j]] < cls:
+                    cls = matr[optTour[i]][tour_copy[j]]
+                    optTour[i + 1] = tour_copy[j]                    #j jest najblizszym sasaidem
+            tour_copy.remove(optTour[i+1])
 
         else:
-            optTour[i+1] = tour[0]
+            optTour[i+1] = tour_copy[0]
     return optTour
 
 
@@ -31,13 +31,26 @@ def destination(sizeTab, matr):
     weight += matr[optTour[int(sizeTab) - 1]][optTour[0]]
     return weight
 
-def result():
-    optTour[0] = random.randint(0, sizeTab - 1)  # wrzuc randomowe miesato na poczatek
-    tour.remove(optTour[0])  # usun z wyjsciowej tablicy miasto
-    print('\nOptimum tour:')
-    print(close_neighbour(optTour, matr, tour))
-    print('Destination:')
-    print(destination(sizeTab, matr))
+def result(tour):
+    tour_copy = tour.copy()                         #wez kopie a nie wskaznik
+    optTour[0] = tour[0]
+    tour_copy.remove(tour[0])
+    random.shuffle(tour_copy)
+    close_neighbour(optTour, matr, tour_copy)
+    mini = destination(sizeTab, matr)
+
+    for i in range(1, int(sizeTab)):
+        tour_copy = tour.copy()
+        optTour[0] = tour[i]
+        tour_copy.remove(optTour[0])
+        random.shuffle(tour_copy)
+        close_neighbour(optTour, matr, tour_copy)
+        if destination(sizeTab, matr) < mini:
+            mini = destination(sizeTab,matr)
+    print(mini)
+
+
+
 
 #brazil58 - half matrix
 #br17 - full matrix
@@ -52,7 +65,6 @@ sizeTab = len(zmienna)
 tour = [0 for j in range(int(sizeTab))]
 for i in range(0, int(sizeTab)):
     tour[i] = i
-random.shuffle(tour)
 
 
 optTour = [0 for j in range(int(sizeTab))]
@@ -62,13 +74,13 @@ matr = [[0 for _ in range(sizeTab)] for _ in range(sizeTab)]
 if not k:
     if not problem.is_explicit():
         fill_matrix(sizeTab, matr, 1)
-        result()
+        result(tour)
 
     else:
         fill_matrix(sizeTab, matr, 0)
-        result()
+        result(tour)
 
 else:
-
     fill_matrix(sizeTab, matr,0)
-    result()
+    result(tour)
+

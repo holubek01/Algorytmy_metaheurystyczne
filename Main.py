@@ -1,0 +1,174 @@
+import random
+
+import tsplib95
+
+problem = tsplib95.load('C:\\Users\\holub\\OneDrive - Politechnika Wroclawska\\Desktop\\ALL_tsp\\berlin52.tsp\\berlin52.tsp')
+
+k = problem.is_full_matrix()
+zmienna = list(problem.get_nodes())
+sizeTab = len(zmienna)
+end = 10
+
+sumA = 0
+sumB = 0
+sumC = 0
+
+tour = [0 for j in range(int(sizeTab))]
+optTour = [0 for j in range(int(sizeTab))]
+matr = [[0 for _ in range(sizeTab)] for _ in range(sizeTab)]
+
+
+def close_neighbour(optTour, matr, tour):
+    for i in range(0, int(sizeTab) - 1):
+        cls = matr[optTour[i]][tour[0]]
+        optTour[i+1] = tour[0]
+        if len(tour) > 1:
+            for j in range(1, len(tour)):
+                if matr[optTour[i]][tour[j]] < cls:
+                    cls = matr[optTour[i]][tour[j]]
+                    optTour[i + 1] = tour[j]
+            tour.remove(optTour[i+1])
+
+        else:
+            optTour[i+1] = tour[0]
+    return optTour
+
+
+def fill_matrix(sizeTab, matr, l):
+    for i in range(0, sizeTab):
+        for j in range(0, sizeTab):
+            edge = i + l, j + l
+            matr[i][j] = problem.get_weight(*edge)
+
+
+
+def opt2(swap_tour, i, j):
+    help_zmienna = swap_tour[i]
+    swap_tour[i] = swap_tour[j]
+    swap_tour[j] = help_zmienna
+
+    zmienna2 = destination2(len(swap_tour), matr, swap_tour)
+
+    help_zmienna = swap_tour[i]
+    swap_tour[i] = swap_tour[j]
+    swap_tour[j] = help_zmienna
+
+    return zmienna2
+
+
+def destination2(sizeTab, matr, tour3):
+    weight = 0
+    for i in range(0, int(sizeTab) - 1):
+        weight += matr[tour3[i]][tour3[i + 1]]
+
+    weight += matr[tour3[int(sizeTab) - 1]][tour3[0]]
+    return weight
+
+def opt_swap(swap_tour, i, j):
+    help_zmienna = swap_tour[i]
+    swap_tour[i] = swap_tour[j]
+    swap_tour[j] = help_zmienna
+
+    return swap_tour
+
+def koks_funkcja(acutal_tour):
+    potential_tour = acutal_tour.copy()
+
+    mini = opt2(acutal_tour, 0,1)
+    k = 0
+    l = 1
+
+
+    for i in range(0, len(acutal_tour)):
+        for j in range(i+1, len(acutal_tour)):
+            potential_mini = opt2(acutal_tour, i, j)
+            if potential_mini < mini:
+                mini = potential_mini
+                k = i
+                l = j
+
+    if(mini < destination2(len(potential_tour), matr, potential_tour)):
+        koks_funkcja(opt_swap(acutal_tour,k,l))
+    else:
+        global sumC
+        sumC += destination2(len(potential_tour), matr, potential_tour)
+        print(destination2(len(potential_tour), matr, potential_tour))
+        #print(potential_tour)
+
+
+def result(tour):
+    tour_copy = tour.copy()
+    tour_copy_2 = tour.copy()
+
+    random.shuffle(tour_copy_2)
+    optTour[0] = tour_copy_2[0]
+    tour_copy_2.remove(tour_copy_2[0])
+
+    close_neighbour(optTour, matr, tour_copy_2)
+    print(destination2(sizeTab, matr, optTour))
+    destination2(sizeTab, matr, optTour)
+    global sumA
+    sumA +=destination2(sizeTab, matr, optTour)
+
+    optTour[0] = tour[0]
+    tour_copy.remove(tour[0])
+    random.shuffle(tour_copy)
+    close_neighbour(optTour, matr, tour_copy)
+    mini2 = destination2(sizeTab, matr, optTour)
+
+    droga = optTour
+    for i in range(1, int(sizeTab)):
+        tour_copy = tour.copy()
+        optTour[0] = tour[i]
+        tour_copy.remove(optTour[0])
+        random.shuffle(tour_copy)
+        close_neighbour(optTour, matr, tour_copy)
+        if destination2(sizeTab, matr, optTour) < mini2:
+            droga = optTour.copy()
+            mini2 = destination2(sizeTab, matr, optTour)
+    #print(droga)
+    global sumB
+    sumB += destination2(sizeTab, matr, droga)
+    print(destination2(sizeTab, matr, droga))
+    koks_funkcja(droga)
+
+def main():
+
+    for i in range(0, end):
+        for i in range(0, int(sizeTab)):
+            tour[i] = i
+        random.shuffle(tour)
+
+
+
+        if not k:
+            if not problem.is_explicit():
+                fill_matrix(sizeTab, matr, 1)
+                result(tour)
+
+
+            else:
+                fill_matrix(sizeTab, matr, 0)
+                result(tour)
+
+
+        else:
+
+            fill_matrix(sizeTab, matr, 0)
+            result(tour)
+
+
+        print('')
+        print('')
+
+    print('sumA:')
+    print(sumA/end)
+
+    print('sumB:')
+    print(sumB/end)
+
+    print('sumC:')
+    print(sumC/end)
+
+if __name__=="__main__":
+    main()

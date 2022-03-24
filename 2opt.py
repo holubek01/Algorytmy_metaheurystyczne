@@ -45,11 +45,12 @@ def opt2(swap_tour, i, j):
     return zmienna2
 
 
-def destination2(sizeTab, matr, tour):
+def destination2(sizeTab, matr, tour3):
     weight = 0
     for i in range(0, int(sizeTab) - 1):
-        weight += matr[tour[i]][tour[i + 1]]
-    weight += matr[tour[int(sizeTab) - 1]][tour[0]]
+        weight += matr[tour3[i]][tour3[i + 1]]
+
+    weight += matr[tour3[int(sizeTab) - 1]][tour3[0]]
     return weight
 
 def opt_swap(swap_tour, i, j):
@@ -62,10 +63,11 @@ def opt_swap(swap_tour, i, j):
 
 def koks_funkcja(acutal_tour):
     potential_tour = acutal_tour.copy()
+
     mini = opt2(acutal_tour, 0,1)
-    print(mini)
     k = 0
     l = 1
+
 
     for i in range(0, len(acutal_tour)):
         for j in range(i+1, len(acutal_tour)):
@@ -78,29 +80,17 @@ def koks_funkcja(acutal_tour):
     if(mini < destination2(len(potential_tour), matr, potential_tour)):
         koks_funkcja(opt_swap(acutal_tour,k,l))
     else:
-        print(potential_tour)
         print(destination2(len(potential_tour), matr, potential_tour))
-
-
-
-
-
-#def result():
- #   optTour[0] = random.randint(0, sizeTab - 1)                  # wrzuc randomowe miesato na poczatek
-  #  tour.remove(optTour[0])                                  # usun z wyjsciowej tablicy miasto
-   # pi_0 = close_neighbour(optTour, matr, tour)
-
-#    koks_funkcja(pi_0)
-
+        print(potential_tour)
 
 
 def result(tour):
-    tour_copy = tour.copy()                         #wez kopie a nie wskaznik
+    tour_copy = tour.copy()
     optTour[0] = tour[0]
     tour_copy.remove(tour[0])
     random.shuffle(tour_copy)
     close_neighbour(optTour, matr, tour_copy)
-    mini2 = destination(sizeTab, matr)
+    mini2 = destination2(sizeTab, matr, optTour)
 
     droga = optTour
     for i in range(1, int(sizeTab)):
@@ -109,11 +99,14 @@ def result(tour):
         tour_copy.remove(optTour[0])
         random.shuffle(tour_copy)
         close_neighbour(optTour, matr, tour_copy)
-        if destination(sizeTab, matr) < mini2:
-            droga = optTour
-            mini2 = destination(sizeTab, matr)
-    print(optTour)
+        if destination2(sizeTab, matr, optTour) < mini2:
+            droga = optTour.copy()
+            mini2 = destination2(sizeTab, matr, optTour)
+    print(droga)
+    print(destination2(sizeTab, matr, droga))
     print(mini2)
+    print('')
+    print('')
     koks_funkcja(droga)
 
 
@@ -121,8 +114,8 @@ def result(tour):
 #br17 - full matrix
 #berlin52 - euclides
 
-problem = tsplib95.load('C:\\Users\\holub\\OneDrive - Politechnika Wroclawska\\Desktop\\ALL_tsp\\berlin52.tsp\\berlin52.tsp')
-#problem2 = tsplib95.load('C:/Users/piotr/Desktop/Meta/brg180.opt.tour')
+problem = tsplib95.load('C:\\Users\\holub\\OneDrive - Politechnika Wroclawska\\Desktop\\ALL_tsp\\bier127.tsp\\bier127.tsp')
+
 k = problem.is_full_matrix()
 zmienna = list(problem.get_nodes())
 sizeTab = len(zmienna)

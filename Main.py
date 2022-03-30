@@ -1,8 +1,8 @@
 import random
-
+import time
 import tsplib95
 
-problem = tsplib95.load('C:\\Users\\holub\\OneDrive - Politechnika Wroclawska\\Desktop\\ALL_tsp\\berlin52.tsp\\berlin52.tsp')
+problem = tsplib95.load('C:\\Users\\piotr\\Desktop\\Meta\\bier127.tsp')
 
 k = problem.is_full_matrix()
 zmienna = list(problem.get_nodes())
@@ -12,6 +12,9 @@ end = 10
 sumA = 0
 sumB = 0
 sumC = 0
+time1 = 0
+time2 = 0
+time3 = 0
 
 tour = [0 for j in range(int(sizeTab))]
 optTour = [0 for j in range(int(sizeTab))]
@@ -103,13 +106,21 @@ def result(tour):
     random.shuffle(tour_copy_2)
     optTour[0] = tour_copy_2[0]
     tour_copy_2.remove(tour_copy_2[0])
-
+    global a1
+    a1 = time.time()
     close_neighbour(optTour, matr, tour_copy_2)
+    global b1
+    b1 = time.time()
+    global time1
+    time1 += ((b1-a1)*1000)
     print(destination2(sizeTab, matr, optTour))
     destination2(sizeTab, matr, optTour)
     global sumA
     sumA +=destination2(sizeTab, matr, optTour)
 
+
+    global a2
+    a2 = time.time()
     optTour[0] = tour[0]
     tour_copy.remove(tour[0])
     random.shuffle(tour_copy)
@@ -126,11 +137,22 @@ def result(tour):
         if destination2(sizeTab, matr, optTour) < mini2:
             droga = optTour.copy()
             mini2 = destination2(sizeTab, matr, optTour)
-    #print(droga)
+    global b2
+    b2 = time.time()
+    global time2
+    time2 += ((b2 - a2) * 1000)
+
     global sumB
     sumB += destination2(sizeTab, matr, droga)
     print(destination2(sizeTab, matr, droga))
+
+    global a3
+    a3 = time.time()
     koks_funkcja(droga)
+    global b3
+    b3 = time.time()
+    global time3
+    time3 += ((b3 - a3) * 1000)
 
 def main():
 
@@ -169,6 +191,15 @@ def main():
 
     print('sumC:')
     print(sumC/end)
+
+    print('timeA:')
+    print(time1/end)
+
+    print('timeB:')
+    print(time2/end)
+
+    print('timeC:')
+    print(time3/end)
 
 if __name__=="__main__":
     main()

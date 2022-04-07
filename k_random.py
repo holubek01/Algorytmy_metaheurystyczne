@@ -37,8 +37,8 @@ def result ():
     mini = k_random(sizeTab, matr, tour, mini)
     print(mini)
 
-problem = tsplib95.load('C:\\Users\\holub\\OneDrive - Politechnika Wroclawska\\Desktop\\ALL_tsp\\berlin52.tsp\\berlin52.tsp')
-problem2 = tsplib95.load('C:\\Users\\holub\\OneDrive - Politechnika Wroclawska\\Desktop\\ALL_tsp\\brg180.opt.tour\\brg180.opt.tour')
+problem = tsplib95.load('C:\\ALL_tsp\\bier127.tsp\\bier127.tsp')
+#problem2 = tsplib95.load('C:\\Users\\holub\\OneDrive - Politechnika Wroclawska\\Desktop\\ALL_tsp\\brg180.opt.tour\\brg180.opt.tour')
 k = problem.is_full_matrix()
 zmienna = list(problem.get_nodes())
 sizeTab = len(zmienna)
@@ -52,18 +52,12 @@ print(sizeTab)
 
 matr = [[0 for _ in range(sizeTab)] for _ in range(sizeTab)]
 
-if not k:
-    if not problem.is_explicit():
-            fill_matrix(sizeTab, matr, 1)
-            result()
-    else:
-        fill_matrix(sizeTab, matr,0)
-        result()
-
+if not k and not problem.is_explicit():
+    fill_matrix(sizeTab, matr, 1)
 else:
+    fill_matrix(sizeTab, matr, 0)
 
-    fill_matrix(sizeTab, matr,0)
-    result()
+result()
 
 
 

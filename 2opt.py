@@ -114,7 +114,7 @@ def result(tour):
 #br17 - full matrix
 #berlin52 - euclides
 
-problem = tsplib95.load('C:\\Users\\holub\\OneDrive - Politechnika Wroclawska\\Desktop\\ALL_tsp\\bier127.tsp\\bier127.tsp')
+problem = tsplib95.load('C:\\ALL_tsp\\bier127.tsp\\bier127.tsp')
 
 k = problem.is_full_matrix()
 zmienna = list(problem.get_nodes())
@@ -130,16 +130,26 @@ optTour = [0 for j in range(int(sizeTab))]
 matr = [[0 for _ in range(sizeTab)] for _ in range(sizeTab)]
 
 
-if not k:
-    if not problem.is_explicit():
-        fill_matrix(sizeTab, matr, 1)
-        result(tour)
-
-    else:
-        fill_matrix(sizeTab, matr, 0)
-        result(tour)
-
+if not k and not problem.is_explicit():
+    fill_matrix(sizeTab, matr, 1)
 else:
+    fill_matrix(sizeTab, matr, 0)
 
-    fill_matrix(sizeTab, matr,0)
-    result(tour)
+result(tour)
+
+
+
+#
+# if not k:
+#     if not problem.is_explicit():
+#         fill_matrix(sizeTab, matr, 1)
+#         result(tour)
+#
+#     else:
+#         fill_matrix(sizeTab, matr, 0)
+#         result(tour)
+#
+# else:
+#
+#     fill_matrix(sizeTab, matr,0)
+#     result(tour)

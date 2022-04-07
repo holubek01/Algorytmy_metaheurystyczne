@@ -71,16 +71,10 @@ optTour = [0 for j in range(int(sizeTab))]
 matr = [[0 for _ in range(sizeTab)] for _ in range(sizeTab)]
 
 
-if not k:
-    if not problem.is_explicit():
-        fill_matrix(sizeTab, matr, 1)
-        result(tour)
-
-    else:
-        fill_matrix(sizeTab, matr, 0)
-        result(tour)
-
+if not k and not problem.is_explicit():
+    fill_matrix(sizeTab, matr, 1)
 else:
-    fill_matrix(sizeTab, matr,0)
-    result(tour)
+    fill_matrix(sizeTab, matr, 0)
+
+result(tour)
 

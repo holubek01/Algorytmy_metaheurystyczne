@@ -2,19 +2,28 @@ import random
 import time
 import tsplib95
 
-problem = tsplib95.load('C:\\Users\\piotr\\Desktop\\Meta\\bier127.tsp')
+problem = tsplib95.load('C:\\ALL_tsp\\bier127.tsp\\bier127.tsp')
 
 k = problem.is_full_matrix()
 zmienna = list(problem.get_nodes())
 sizeTab = len(zmienna)
 end = 10
+licznik = 0
+
+il = 3
+matr2 = [[0 for _ in range(il)] for _ in range(il)]
+for i in range(il):
+    for j in range(il):
+        matr2[i][j] = random.randint(1,1000)
 
 sumA = 0
 sumB = 0
 sumC = 0
+sumD = 0
 time1 = 0
 time2 = 0
 time3 = 0
+time4 = 0
 
 tour = [0 for j in range(int(sizeTab))]
 optTour = [0 for j in range(int(sizeTab))]
@@ -81,7 +90,8 @@ def koks_funkcja(acutal_tour):
     k = 0
     l = 1
 
-
+    global a4
+    a4 = time.time()
     for i in range(0, len(acutal_tour)):
         for j in range(i+1, len(acutal_tour)):
             potential_mini = opt2(acutal_tour, i, j)
@@ -89,14 +99,18 @@ def koks_funkcja(acutal_tour):
                 mini = potential_mini
                 k = i
                 l = j
-
+    global b4
+    b4 = time.time()
+    global licznik
+    licznik += 1
+    global time4
+    time4 += ((b4 - a4) * 1000)
     if(mini < destination2(len(potential_tour), matr, potential_tour)):
         koks_funkcja(opt_swap(acutal_tour,k,l))
     else:
         global sumC
         sumC += destination2(len(potential_tour), matr, potential_tour)
-        print(destination2(len(potential_tour), matr, potential_tour))
-        #print(potential_tour)
+
 
 
 def result(tour):
@@ -113,7 +127,6 @@ def result(tour):
     b1 = time.time()
     global time1
     time1 += ((b1-a1)*1000)
-    print(destination2(sizeTab, matr, optTour))
     destination2(sizeTab, matr, optTour)
     global sumA
     sumA +=destination2(sizeTab, matr, optTour)
@@ -144,7 +157,6 @@ def result(tour):
 
     global sumB
     sumB += destination2(sizeTab, matr, droga)
-    print(destination2(sizeTab, matr, droga))
 
     global a3
     a3 = time.time()
@@ -156,32 +168,19 @@ def result(tour):
 
 def main():
 
+    print(matr2)
+
     for i in range(0, end):
         for i in range(0, int(sizeTab)):
             tour[i] = i
         random.shuffle(tour)
 
-
-
-        if not k:
-            if not problem.is_explicit():
-                fill_matrix(sizeTab, matr, 1)
-                result(tour)
-
-
-            else:
-                fill_matrix(sizeTab, matr, 0)
-                result(tour)
-
-
+        if not k and not problem.is_explicit():
+            fill_matrix(sizeTab, matr, 1)
         else:
-
             fill_matrix(sizeTab, matr, 0)
-            result(tour)
 
-
-        print('')
-        print('')
+        result(tour)
 
     print('sumA:')
     print(sumA/end)
@@ -192,6 +191,11 @@ def main():
     print('sumC:')
     print(sumC/end)
 
+    print('sumD:')
+    print(sumD / end)
+
+    print('')
+
     print('timeA:')
     print(time1/end)
 
@@ -200,6 +204,10 @@ def main():
 
     print('timeC:')
     print(time3/end)
+
+    print('timeD:')
+    print(time4 / licznik)
+
 
 if __name__=="__main__":
     main()

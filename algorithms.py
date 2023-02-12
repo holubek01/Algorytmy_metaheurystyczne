@@ -1,5 +1,5 @@
 """
-Implementacje algorytmów K-random oraz closest-neighbour
+Implementacje algorytmów K-random, closest neighbour, extended closest neighbour oraz 2-opt
 rozwiązujące problem komiwojażera
 """
 
